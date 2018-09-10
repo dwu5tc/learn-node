@@ -1,0 +1,9 @@
+extends layout
+
+include mixins/_storeForm
+
+block content
+  .inner
+    // h2 #{ title } below is shorter if only need variable and not interpolation
+    h2= title
+    +storeForm({ name: 'Tim Hortons' })

@@ -11,6 +11,7 @@ exports.catchErrors = (fn) => {
     return fn(req, res, next).catch(next);
   };
 };
+// how does this work???
 
 /*
   Not Found Error Handler
@@ -18,6 +19,7 @@ exports.catchErrors = (fn) => {
   If we hit a route that is not found, we mark it as 404 and pass it along to the next error handler to display
 */
 exports.notFound = (req, res, next) => {
+  console.log('hit not found error');
   const err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -30,10 +32,13 @@ exports.notFound = (req, res, next) => {
 */
 
 exports.flashValidationErrors = (err, req, res, next) => {
+  console.log('hit flash validation errors MW');
   if (!err.errors) return next(err);
+  console.log('found a flash validation error');
   // validation errors look like
   const errorKeys = Object.keys(err.errors);
   errorKeys.forEach(key => req.flash('error', err.errors[key].message));
+  console.log(JSON.stringify(err.errors));
   res.redirect('back');
 };
 
@@ -44,6 +49,7 @@ exports.flashValidationErrors = (err, req, res, next) => {
   In development we show good error messages so if we hit a syntax error or any other previously un-handled error, we can show good info on what happened
 */
 exports.developmentErrors = (err, req, res, next) => {
+  console.log('hit dev errors MW');
   err.stack = err.stack || '';
   const errorDetails = {
     message: err.message,
@@ -67,6 +73,7 @@ exports.developmentErrors = (err, req, res, next) => {
   No stacktraces are leaked to user
 */
 exports.productionErrors = (err, req, res, next) => {
+  console.log('hit prod errors MW');
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,

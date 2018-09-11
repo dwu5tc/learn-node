@@ -2,4 +2,6 @@ node_modules/
 public/**
 
 !public/javascripts/
-
+!public/javascripts/*
+!public/javascripts/modules/
+!public/javascripts/modules/*

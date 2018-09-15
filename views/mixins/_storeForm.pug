@@ -8,7 +8,7 @@ mixin storeForm(store = {})
     //- address, lng and lat
     label(for="address") Address
     //- bodyParser.urlencoded({ extended: true }) allows use of inputs with nested data e.g location.address/location[address] 
-    input(type="text" id="address" name="location[adddress]" value=(store.location && store.location.address))
+    input(type="text" id="address" name="location[address]" value=(store.location && store.location.address))
     //- convention to put lng first apparently (for mongodb) 
     label(for="lng") Address Lng 
     input(type="text" id="lng" name="location[coordinates][0]" value=(store.location && store.location.coordinates[0]) required)    

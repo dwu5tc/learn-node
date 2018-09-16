@@ -68,10 +68,9 @@ storeSchema.pre('save', async function(next) {
 // unwind duplicates
 storeSchema.statics.getTagsList = function() {
   return this.aggregate([
-  	{ $unwind: '$tags' }
-  	// { $unwind: '$tags' },
-  	// { $group: { _id: '$tags', count: { $sum: 1 } } },
-  	// { $sort: { count: -1 } }
+  	{ $unwind: '$tags' },
+  	{ $group: { _id: '$tags', count: { $sum: 1 } } },
+  	{ $sort: { count: -1 } }
   ]);
 }
 

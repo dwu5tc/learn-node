@@ -122,13 +122,14 @@ exports.updateStore = async (req, res) => {
   req.body.location.type = 'Point';
 
   // find and update the store
+  // what if the slug changes??? wasn't addressed in the course
   const store = await Store.findOneAndUpdate({ _id: req.params.id }, req.body, {
     new: true, // return the new store instead of the old store
     runValidators: true // force model to run require validators again
   }).exec(); // why???R
 
   // redirect them to the store and tell them it worked
-  req.flash('success', `Successfully updated <strong>${ store.name }</strong>. <a href="/stores/${ store.slug }">View Store</a>`);
+  req.flash('success', `Successfully updated <strong>${ store.name }</strong>. <a href="/store/${ store.slug }">View Store</a>`);
   res.redirect(`/stores/${ store._id }/edit`);
 }
 
@@ -137,4 +138,11 @@ exports.getStoreBySlug = async (req, res, next) => {
   if (!store) return next();
 
   res.render('store', { store, title: store.name });
+}
+
+exports.getStoresByTag = async (req, res) => {
+  const stores = await Store.getTagsList();
+  res.json(stores);
+  // const tag = req.params.tag;
+  // res.render('tags', { tags, title: 'Tags' });
 }

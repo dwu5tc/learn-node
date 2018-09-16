@@ -39,16 +39,41 @@ const storeSchema = new mongoose.Schema({
 
 // this happens on every save of the store
 // cannot be arrow func cuz we need 'this'
-storeSchema.pre('save', function(next) {
-  // before saving, autogen the slug 
-  if (!this.isModified('name')) {
+storeSchema.pre('save', async function(next) {
+  console.log('saving');
+  if (!this.isModified('name')) { // when does this get reached???
     next(); // skip it
     return;
     // return next(); more concise
   }
+  // before saving, autogen the slug
   this.slug = slug(this.name);
+  console.log(this.slug);
+
+  // find other stores that have same slug
+  // will fuzzy match with regex instead of absolute value
+  const slugRegEx = new RegExp(`^(${ this.slug })((-[0-9]*$)?)$`, 'i');
+  
+  // need Store.find but store hasn't been made yet...
+  // this.constructor accesses the model inside a models function
+  // this.constructor will be equal to Store by the time it runs???
+  const storesWithSlug = await this.constructor.find({ slug: slugRegEx });
+  if (storesWithSlug.length) {
+  	this.slug = `${ this.slug }-${ storesWithSlug.length + 1 }`;
+  }
+
   next();
 });
+
+// unwind duplicates
+storeSchema.statics.getTagsList = function() {
+  return this.aggregate([
+  	{ $unwind: '$tags' }
+  	// { $unwind: '$tags' },
+  	// { $group: { _id: '$tags', count: { $sum: 1 } } },
+  	// { $sort: { count: -1 } }
+  ]);
+}
 
 module.exports = mongoose.model('Store', storeSchema);
 

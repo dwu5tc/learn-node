@@ -1,0 +1,2 @@
+review: how errors propogate throughout the requests/mws
+look into: passport

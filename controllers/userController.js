@@ -19,7 +19,7 @@ exports.validateRegister = (req, res, next) => {
     remove_extension: false,
     gmail_remove_subaddress: false
   });
-  req.checkBody('passwor d', 'Password cannot be blank!').notEmpty();
+  req.checkBody('password', 'Password cannot be blank!').notEmpty();
   req.checkBody('password-confirm', 'Confirmed password cannot be blank!').notEmpty();
   req.checkBody('password-confirm', 'Oops! Your passwords do not match!').equals(req.body.password);
 
@@ -44,6 +44,5 @@ exports.register = async (req, res, next) => {
   console.log(user);
   const register = promisify(User.register, User); 
   await register(user, req.body.password);
-  res.send('it works'); 
   next();
 };

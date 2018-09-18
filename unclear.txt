@@ -1,2 +1,3 @@
 review: how errors propogate throughout the requests/mws
 look into: passport
+why/fix: registering with nonunqiue email gives error that is not redirect back + flash

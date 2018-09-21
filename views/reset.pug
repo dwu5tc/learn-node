@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  .inner
+    h2= title
+    //- when no action, defaults to POSTing to itself
+    form.form(method="POST")
+      label(for="password") Password
+      input(type="password" name="password")
+      label(for="password-confirm") Password Confirm
+      input(type="password" name="password-confirm")
+      input.button(type="submit" value="Reset Password")

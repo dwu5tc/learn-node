@@ -11,7 +11,7 @@ exports.registerForm = (req, res) => {
 };
 
 exports.validateRegister = (req, res, next) => {
-  req.sanitizeBody('name'); // express validator
+  req.sanitizeBody('name'); // provided by express validator
   req.checkBody('name', 'You must supply a name!').notEmpty();
   req.checkBody('email', 'That email is not valid!').isEmail();
   req.sanitizeBody('email').normalizeEmail({
@@ -25,8 +25,9 @@ exports.validateRegister = (req, res, next) => {
 
   const errors = req.validationErrors();
   if (errors) {
-    // handle errors, don't pass onto any error handling mw
+    // handle errors, don't pass onto any error handling MW
     req.flash('error', errors.map(err => err.msg));
+    
     // don't clear the form
     // explicitly pass the flashes since they normally only get passed in the next request
     res.render('register', { title: 'Register', body: req.body, flashes: req.flash() });
@@ -37,6 +38,8 @@ exports.validateRegister = (req, res, next) => {
 
 exports.register = async (req, res, next) => {
   const user = new User({ email: req.body.email, name: req.body.name });
+  
+  // with callback
   // User.register(user, req.body.password, function(err, user) {
   // })
 

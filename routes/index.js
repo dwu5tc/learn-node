@@ -59,5 +59,11 @@ router.get('/account',
   authController.isLoggedIn, 
   userController.account);
 router.post('/account', catchErrors(userController.updateAccount));
+router.post('/account/forgot', catchErrors(authController.forgot)); // maybe makes more sense to be login/forgot???
+router.get('/account/reset/:token', catchErrors(authController.reset));
+router.post('/account/reset/:token', 
+  authController.confirmedPasswords,
+  catchErrors(authController.update));
+// router.post('reset', userContrller.updatePassword);
 
 module.exports = router;

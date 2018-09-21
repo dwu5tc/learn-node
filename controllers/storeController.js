@@ -5,8 +5,9 @@ const jimp = require('jimp'); // for resizing images
 const uuid = require('uuid'); // makes file names unique
 
 const multerOptions = {
-  // handles upload, read to memory, don't actually save to disk
+  // handles upload and reads to memory, doesn't actually save to disk
   storage: multer.memoryStorage(),
+  
   // ES6 short method syntax
   // next = a callback
   fileFilter(req, file, next) {
@@ -19,7 +20,8 @@ const multerOptions = {
       next({ message: 'That filetype isn\'t allowed!' }, false);
     }
   }
-}; 
+};
+
 // exports.myMiddleware = (req, res, next) => {
 //   console.log('here in exports MW');
 //   req.name = 'Wes';
@@ -126,7 +128,7 @@ exports.updateStore = async (req, res) => {
   const store = await Store.findOneAndUpdate({ _id: req.params.id }, req.body, {
     new: true, // return the new store instead of the old store
     runValidators: true // force model to run require validators again
-  }).exec(); // why???R
+  }).exec(); // why???
 
   // redirect them to the store and tell them it worked
   req.flash('success', `Successfully updated <strong>${ store.name }</strong>. <a href="/store/${ store.slug }">View Store</a>`);

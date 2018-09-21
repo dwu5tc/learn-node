@@ -2,3 +2,4 @@ review: how errors propogate throughout the requests/mws
 look into: passport
 look into: helpers
 why/fix: registering with nonunqiue email gives error that is not redirect back + flash
+why: cant confirm passwords on the frontend (authcontroller.confirmedpasswords)

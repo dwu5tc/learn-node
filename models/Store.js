@@ -42,10 +42,13 @@ const storeSchema = new mongoose.Schema({
   }
 });
 
+// define indexes
 storeSchema.index({
   name: 'text',
   description: 'text'
 });
+
+storeSchema.index({ location: '2dsphere' });
 
 // this happens on every save of the store
 // cannot be arrow func cuz we need 'this'

@@ -142,7 +142,7 @@ exports.updateStore = async (req, res) => {
   // redirect them to the store and tell them it worked
   req.flash('success', `Successfully updated <strong>${ store.name }</strong>. <a href="/store/${ store.slug }">View Store</a>`);
   res.redirect(`/stores/${ store._id }/edit`);
-}
+};
 
 exports.getStoreBySlug = async (req, res, next) => {
   const store = await Store.findOne({ slug: req.params.slug }).populate('author');
@@ -158,4 +158,21 @@ exports.getStoresByTag = async (req, res) => {
   const storesPromise = Store.find({ tags: tagQuery });
   const [tags, stores] = await Promise.all([tagsPromise, storesPromise]);
   res.render('tags', { tags, title: 'Tags', tag, stores });
-}
+};
+
+exports.searchStores = async (req, res) => {
+  const stores = await Store
+  // first find stores that match
+  .find({
+    $text: {
+      $search: req.query.q
+    }
+  }, { // this second object is a projection
+    score: { $meta: 'textScore' }
+  })
+  .sort({
+    score: { $meta: 'textScore' } // why is this liek this???
+  })
+  .limit(5);
+  res.json(stores); 
+};

@@ -42,6 +42,11 @@ const storeSchema = new mongoose.Schema({
   }
 });
 
+storeSchema.index({
+  name: 'text',
+  description: 'text'
+});
+
 // this happens on every save of the store
 // cannot be arrow func cuz we need 'this'
 storeSchema.pre('save', async function(next) {

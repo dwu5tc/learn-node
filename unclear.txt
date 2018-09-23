@@ -1,5 +1,7 @@
 review: how errors propogate throughout the requests/mws
 review: regular and arrow functions, this keyword
+review: proper css conventions, rems, etc
+look into: animations css (like the hearting)
 look into: passport
 look into: helpers
 look into: data sanitization (storeschema pre save) and XSS attacks

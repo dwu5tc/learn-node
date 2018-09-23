@@ -69,7 +69,7 @@ exports.addStore = (req, res) => {
 exports.createStore = async (req, res) => {
   req.body.author = req.user._id;
   const store = await (new Store(req.body)).save();
-  req.flash('success', `Successfully created ${store.name}. Care to leave a review?`);
+  req.flash('success', `Successfully created ${ store.name }. Care to leave a review?`);
   res.redirect(`/store/${ store.slug }`);
 
   // const store = new Store(req.body);

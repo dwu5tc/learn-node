@@ -21,7 +21,6 @@ function loadPlaces(map, lat = 43.2, lng = -79.8) {
 
       const markers = places.map(place => {
         const [placeLng, placeLat] = place.location.coordinates;
-        console.log(placeLat, placeLng);
         const position = { lat: placeLat, lng: placeLng };
         bounds.extend(position);
         const marker = new google.maps.Marker({ map, position });
@@ -41,7 +40,6 @@ function loadPlaces(map, lat = 43.2, lng = -79.8) {
         `
         infoWindow.setContent(html);
         infoWindow.open(map, this);
-        console.log(this);
       }));
 
       // set zoom

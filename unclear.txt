@@ -4,5 +4,6 @@ look into: passport
 look into: helpers
 look into: data sanitization (storeschema pre save) and XSS attacks
 look into: how blingjs works and queryselector/(all)
+why: we use form for the heart
 why/fix: registering with nonunqiue email gives error that is not redirect back + flash
 why: cant confirm passwords on the frontend (authcontroller.confirmedpasswords)

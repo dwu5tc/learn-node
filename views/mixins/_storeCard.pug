@@ -2,6 +2,15 @@ mixin storeCard(store = {})
   .store
     .store__hero
       .store__actions
+        if user
+          .store__action.store__action--heart
+            //- form because even if javascript fails, will default to a regular form submit...???
+            form.heart(method="POST" action=`/api/stores/${ store._id }/heart`)
+              - const heartStrings = user.hearts.map(obj => obj.toString())
+              //- _id is not actually an obj and not a string
+              - const heartClass = heartStrings.includes(store._id.toString()) ? ' heart__button--hearted' : ''
+              button.heart__button(type="submit" name="heart" class=heartClass)
+                != h.icon('heart')
         if user && store.author.equals(user._id)
           .store__action.store__actions--edit
             a(href=`/stores/${ store._id }/edit`)

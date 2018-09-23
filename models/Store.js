@@ -39,7 +39,10 @@ const storeSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
     required: 'You must suppply an author!'
-  }
+  },
+}, {
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
 });
 
 // define indexes
@@ -81,11 +84,19 @@ storeSchema.pre('save', async function(next) {
 // unwind duplicates
 storeSchema.statics.getTagsList = function() {
   return this.aggregate([
-  	{ $unwind: '$tags' },
+  	{ $unwind: '$tags' }, // a store with an array of tags becomes multiple stores each with one of the tags
   	{ $group: { _id: '$tags', count: { $sum: 1 } } },
   	{ $sort: { count: -1 } }
   ]);
 }
+
+// find reviews where the stores _id === reviews store property
+// like SQL join
+storeSchema.virtual('reviews', { // instead of a function returning something, go to a diff model and do a query
+  ref: 'Review',
+  localField: '_id',
+  foreignField: 'store'
+});
 
 module.exports = mongoose.model('Store', storeSchema);
 

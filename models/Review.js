@@ -27,5 +27,15 @@ const reviewSchema = new mongoose.Schema({
   }
 });
 
+// without this only the _id is present
+function autopopulate(next) {
+  this.populate('author');
+  next();
+}
+
+// add hooks for these queries
+reviewSchema.pre('find', autopopulate);
+reviewSchema.pre('findOne', autopopulate);
+
 module.exports = mongoose.model('Review', reviewSchema);
 

@@ -146,7 +146,7 @@ exports.updateStore = async (req, res) => {
 };
 
 exports.getStoreBySlug = async (req, res, next) => {
-  const store = await Store.findOne({ slug: req.params.slug }).populate('author');
+  const store = await Store.findOne({ slug: req.params.slug }).populate('author reviews');
   if (!store) return next();
 
   res.render('store', { store, title: store.name });
@@ -155,10 +155,10 @@ exports.getStoreBySlug = async (req, res, next) => {
 exports.getStoresByTag = async (req, res) => {
   const tag = req.params.tag;
   const tagQuery = tag || { $exists: true };
-  const tagsPromise = Store.getTagsList();
+  const tagsPromise = Store.getTagsList(); // gets tags and their counts
   const storesPromise = Store.find({ tags: tagQuery });
-  const [tags, stores] = await Promise.all([tagsPromise, storesPromise]);
-  res.render('tags', { tags, title: 'Tags', tag, stores });
+  const [tags, stores] = await Promise.all([tagsPromise, storesPromise]); 
+  res.render('tags', { title: 'Tags', tags, stores, tag });
 };
 
 exports.searchStores = async (req, res) => {

@@ -88,7 +88,42 @@ storeSchema.statics.getTagsList = function() {
   	{ $group: { _id: '$tags', count: { $sum: 1 } } },
   	{ $sort: { count: -1 } }
   ]);
-}
+};
+
+storeSchema.statics.getTopStores = function() {
+  return this.aggregate([
+      // can't use virtual reviews (from below) since thats mongoose specific
+      // aggregate not mongoose specific, just gets passed to mongodb
+      
+      // look up stores and populate their reviews
+      // mongodb lowercases and adds s for us (Review becomes reviews)
+      { $lookup: { 
+        from: 'reviews', localField: '_id', foreignField: 'store', as: 'reviews' 
+      }},
+      // filter for only items that have 2 or more reviews
+      // only where reviews.1 (index and length 2) exists
+      { $match: {
+        'reviews.1': { $exists: true }
+      }},
+      // add the average reviews field
+      // this works on mongodb 3.4.x
+      // why isn't this working for 3.6.3???
+      // { $addField: {
+      //     averageRating: { $avg: '$reviews.rating' }
+      // }}
+      // need to add back the fields (quirk of aggregation!!!???)
+      { $project: {
+          photo: '$$ROOT.photo',
+          name: '$$ROOT.name',
+          reviews: '$$ROOT.reviews',
+          slug: '$$ROOT.slug',
+          averageRating: { $avg: '$reviews.rating' }
+      }},
+      // sort by average field
+      { $sort: { averageRating: -1 }},
+      { $limit: 10 }
+    ]);
+};
 
 // find reviews where the stores _id === reviews store property
 // like SQL join
@@ -97,6 +132,14 @@ storeSchema.virtual('reviews', { // instead of a function returning something, g
   localField: '_id',
   foreignField: 'store'
 });
+
+function autopopulate(next) {
+  this.populate('reviews');
+  next();
+}
+
+storeSchema.pre('find', autopopulate);
+storeSchema.pre('findOne', autopopulate);
 
 module.exports = mongoose.model('Store', storeSchema);
 

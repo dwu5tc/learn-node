@@ -53,7 +53,7 @@ exports.resize = async (req, res, next) => {
   
   // once written to disk, continue
   next();
-}
+};
 
 exports.homePage = (req, res) => {
   console.log(req.name);
@@ -106,7 +106,7 @@ exports.createStore = async (req, res) => {
 
 exports.getStores = async (req, res) => {
   // query the db for a list of all stores
-  const stores = await Store.find();
+  const stores = await Store.find().populate('reviews');
   // console.log(stores);
   res.render('stores', { title: 'Stores', stores });
 };
@@ -150,7 +150,7 @@ exports.getStoreBySlug = async (req, res, next) => {
   if (!store) return next();
 
   res.render('store', { store, title: store.name });
-}
+};
 
 exports.getStoresByTag = async (req, res) => {
   const tag = req.params.tag;
@@ -216,4 +216,10 @@ exports.getHearts = async (req, res) => {
     _id: { $in: req.user.hearts }
   });
   res.render('stores', { title: 'Hearted Stores', stores });
-}
+};
+
+exports.getTopStores = async (req, res) => {
+  const stores = await Store.getTopStores(); // should keep complex queries outside of the controller
+  // res.json(stores);
+  res.render('topStores', { stores, title: 'Top Stores' });
+};

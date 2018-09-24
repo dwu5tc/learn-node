@@ -2,6 +2,7 @@ review: how errors propogate throughout the requests/mws
 review: regular and arrow functions, this keyword
 review: proper css conventions, rems, etc
 review: virtual fields, autopopulation of document fields
+look into: populate(), mongodb/mongoose operators/etc in general
 look into: animations css (like the hearting)
 look into: passport
 look into: helpers
